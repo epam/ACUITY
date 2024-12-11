@@ -99,6 +99,7 @@ az storage account create \
   --kind StorageV2 \
   --sku Standard_LRS \
   --location $LOCATION \
+  --allow-blob-public-access false \
   --tags "Subscription=$SUBSCRIPTION" "Primary Contact=$PRIMARY_CONTACT" "Environment=${ENVIRONMENT_UPPER}" "Application=${APPLICATION}"
 
 az storage account create \
@@ -109,7 +110,8 @@ az storage account create \
   --kind StorageV2 \
   --sku Standard_LRS \
   --location $LOCATION \
-  --tags "Subscription=$SUBSCRIPTION" "Primary Contact=$PRIMARY_CONTACT" "Environment=${ENVIRONMENT_UPPER}" "Application=${APPLICATION}"  
+  --allow-blob-public-access false \
+  --tags "Subscription=$SUBSCRIPTION" "Primary Contact=$PRIMARY_CONTACT" "Environment=${ENVIRONMENT_UPPER}" "Application=${APPLICATION}"
   
 
 ## Create Backup Vault & Policy. Used for storing snapshots and VM backups. 
@@ -305,7 +307,7 @@ vahub_client_secret=$((az ad app credential reset --id ${vahub_app_id} --append 
 
 
 echo "Creating Azure storage account..."
-az storage account create --name $STORAGE_ACCOUNT_NAME --resource-group $NETWORK_RESOURCE_GROUP --location $LOCATION --kind StorageV2
+az storage account create --name $STORAGE_ACCOUNT_NAME --resource-group $NETWORK_RESOURCE_GROUP --location $LOCATION --kind StorageV2 --allow-blob-public-access false
 
 storage_key=$((az storage account keys list -g $NETWORK_RESOURCE_GROUP -n $STORAGE_ACCOUNT_NAME --query [0].value) | xargs)
 

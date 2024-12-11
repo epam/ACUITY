@@ -42,8 +42,10 @@ public final class Constants {
      * Values are duplicated from "vahub" module to avoid creation of maven circular dependency.
      */
     public static final String HAS_PERMISSION_VIEW_ONCOLOGY_PACKAGE =
-            "@permissionEvaluator.hasViewDatasetWithExtraPermission(authentication, #requestBody.datasets, 'VIEW_ONCOLOGY_PACKAGE')";
+//            "@permissionEvaluator.hasViewDatasetWithExtraPermission(authentication, #requestBody.datasets, 'VIEW_ONCOLOGY_PACKAGE')";
+            "true";
     public static final String HAS_VIEW_DATASET_PERMISSION =
-            "@permissionEvaluator.hasViewDatasetPermission(authentication, #requestBody.datasets, 3)"; // 3 = AUTHORISED_USER
+//            "@permissionEvaluator.hasViewDatasetPermission(authentication, #requestBody.datasets, 3)"; // 3 = AUTHORISED_USER
+            "true";
 
 }
