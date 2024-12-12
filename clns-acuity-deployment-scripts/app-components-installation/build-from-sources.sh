@@ -23,19 +23,23 @@ echo "Creating builds directory in acuity-docker folder"
 mkdir -p clns-acuity-docker/building-mode/builds
 echo "Creating temporary maven artifact folder..."
 
+sudo apt install maven openjdk-8-jdk
+sudo update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+
 #For some reason maven stucks while downloading dependencies related to this plugin
 #As a workaround we explicitly install necessary plugin to local repository before start building main source code.
 #If this dependency is changed in Vahub in future, this dependency should correspondingly be updated.
 wget https://repo1.maven.org/maven2/org/apache/maven/plugins/maven-war-plugin/2.2/maven-war-plugin-2.2.pom
-docker run -it --rm -v "$(pwd)":/usr/src/mymaven -v "$currentDir/maven-repo":/root/.m2 -w /usr/src/mymaven $mvn_image /bin/bash -c \
-"export MAVEN_OPTS=\"$MAVEN_OPTS -Djava.net.preferIPv6Stack=true -Dgenerate.pom=true\"; \
-echo '{\"registry\": \"https://registry.bower.io\", \"strict-ssl\": false}' >~/.bowerrc; \
-echo 'Installing maven WAR plugin'; mvn install -f maven-war-plugin-2.2.pom; \
-echo 'Building VASecurity'; cd clns-acuity-va-security;mvn install -DskipTests;\
-echo 'Building VAHub'; cd ../clns-acuity-vahub; mvn package -P webapp -DskipTests;\
-echo 'Building Admin'; cd ../clns-acuity-admin; mvn install -DskipTests;\
-echo 'Building Flyway'; cd ../clns-acuity-flyway; mvn install -DskipTests;\
-echo 'Building Config Server'; cd ../clns-acuity-config-server; mvn install -DskipTests"
+MAVEN_OPTS="$MAVEN_OPTS -Djava.net.preferIPv6Stack=true -Dgenerate.pom=true"
+#echo '{"registry": "https://registry.bower.io", "strict-ssl": false}' >~/.bowerrc
+
+#echo 'Installing maven WAR plugin'; mvn install -f maven-war-plugin-2.2.pom
+echo 'Building VASecurity'; cd clns-acuity-va-security;mvn install -DskipTests
+echo 'Building VAHub'; cd ../clns-acuity-vahub; mvn package -P webapp -DskipTests
+echo 'Building Admin'; cd ../clns-acuity-admin; mvn install -DskipTests
+echo 'Building Flyway'; cd ../clns-acuity-flyway; mvn install -DskipTests -P docker-flyway -P docker-postgres
+echo 'Building Config Server'; cd ../clns-acuity-config-server; mvn install -DskipTests
 
 cd $currentDir
 
